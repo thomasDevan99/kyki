@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { motion } from "motion/react"
+import Rotate from "./animations";
+import RotateShowcase from "./rotateShowcase"
 
 const pullResults = [
   {
@@ -29,6 +30,8 @@ const pullResults = [
 
 export default function Home() {
   const [pulled, setPulled] = useState(null)
+  const [flipped, setFlipped] = useState(false)
+
   
   function pullBox() {
     
@@ -44,12 +47,20 @@ export default function Home() {
 
   let pullText = 'You have not pulled for an item yet'
   if (pulled) {
+
     console.log('pulled', pulled);
-    pullText = `YOU GOT A ${pullResults.find(res => res.rarityNum === pulled).rarityName} REWARD`
+    // pullText = RotateShowcase(pulled)
+    // pullText = `YOU GOT A ${pullResults.find(res => res.rarityNum === pulled).rarityName} REWARD`
   } 
 
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+            <RotateShowcase 
+            show={pulled}
+            flipped={flipped}
+            onFlip={() => setFlipped(!flipped)}
+            />
+
       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
 
     
