@@ -49,15 +49,15 @@ export default function OrbitingPortal({show, pulledRarity}) {
               {/* Flip Animation */}
               <motion.div
                 animate={{
-                  rotateY: isSelected && flipped ? 180 : 0,
+                  rotateY: isSelected && flipped ? 360 : 0,
                 }}
                 style={{
-                  perspective: 600,
+                  perspective: 1000,
                 }}
                 className="w-full h-full flex items-center justify-center"
               >
-                <div className="w-full h-full backface-hidden">
-                  {isSelected && flipped ? pulledRarity : `Btn ${id + 1}`}
+                <div className="w-full h-full backface-hidden" style={{alignContent: 'center'}}>
+                  {isSelected && flipped ? pulledRarity : `?`}
                 </div>
               </motion.div>
             </motion.button>
