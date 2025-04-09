@@ -32,6 +32,7 @@ export default function OrbitingPortal({show, pulledRarity}) {
           const y = radius * Math.sin(angle);
 
           const isSelected = selected === id;
+          const isRevealed = isSelected && flipped
 
           return (
             <motion.button
@@ -43,14 +44,15 @@ export default function OrbitingPortal({show, pulledRarity}) {
                 y: isSelected ? 0 : y,
                 scale: isSelected ? 1.3 : 1,
                 zIndex: isSelected ? 10 : 1,
+                rotateY: isRevealed ? 1080 : 0,
               }}
-              transition={{ type: "spring", stiffness: 300, damping: 20 }}
+              transition={{ type: "spring", stiffness: isRevealed ? 10 : 100, damping: isRevealed ? 3 : 20}}
             >
               {/* Flip Animation */}
               <motion.div
-                animate={{
-                  rotateY: isSelected && flipped ? 360 : 0,
-                }}
+                // animate={{
+                //   rotateY: isSelected && flipped ? 360 : 0,
+                // }}
                 style={{
                   perspective: 1000,
                 }}
