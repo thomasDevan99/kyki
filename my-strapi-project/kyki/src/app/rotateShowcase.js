@@ -1,80 +1,68 @@
-import { motion } from "framer-motion"
-import "./OrbitingPortal.css" // for flip animations
+import React, { useState } from "react";
+import { motion } from "framer-motion";
 
-export default function OrbitingPortal({ show, flipped, onFlip }) {
-    if (!show) return null
+const buttons = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+const radius = 150;
 
-    const orbitAmount = 20
-    const orbitBlocks = []
+export default function OrbitingPortal({show, pulledRarity}) {
+  const [selected, setSelected] = useState(null);
+  const [flipped, setFlipped] = useState(false);
 
-    for (let i = 0; i < orbitAmount; i++) {
-        const angle = (360 / orbitAmount) * i
-        orbitBlocks.push(
-            <motion.div
-                key={`orbit-${i}`}
-                style={{
-                    position: "absolute",
-                    top: "50%",
-                    left: "50%",
-                    width: 0,
-                    height: 0,
-                }}
-                animate={{
-                    rotate: 360,
-                }}
-                transition={{
-                    repeat: Infinity,
-                    duration: 8,
-                    ease: "linear",
-                }}
-            >
-                <div
-                    style={{
-                        width: 40,
-                        height: 40,
-                        backgroundColor: "#ff0088",
-                        borderRadius: 8,
-                        transform: `rotate(${angle}deg) translate(150px)`,
-                    }}
-                />
-            </motion.div>
-        )
+  console.log('show', show);
+  console.log('pulledRarity', pulledRarity);
+  if (show == null) return
+
+
+  const handleButtonClick = (id) => {
+    if (selected === null) {
+      setSelected(id);
+    } else if (selected === id) {
+      setFlipped((prev) => !prev);
     }
+  };
 
-    return (
-        <div style={overlay}>
-            <div style={centerContainer}>
-                {orbitBlocks}
-                <div
-                    className={`flip-container ${flipped ? "flipped" : ""}`}
-                    onClick={onFlip}
-                >
-                    <div className="flipper">
-                        <div className="front">Click Me</div>
-                        <div className="back">🎉 Surprise!</div>
-                    </div>
+  return (
+    <div className="flex items-center justify-center h-screen bg-gray-100 relative" style={{height: "0"}}>
+
+      {/* Rotating Buttons */}
+      {show &&
+        buttons.map((id, index) => {
+          const angle = (index / buttons.length) * 2 * Math.PI;
+          const x = radius * Math.cos(angle);
+          const y = radius * Math.sin(angle);
+
+          const isSelected = selected === id;
+
+          return (
+            <motion.button
+              key={id}
+              className="absolute w-16 h-16 rounded-full bg-green-400 text-white flex items-center justify-center"
+              onClick={() => handleButtonClick(id)}
+              animate={{
+                x: isSelected ? 0 : x,
+                y: isSelected ? 0 : y,
+                scale: isSelected ? 1.3 : 1,
+                zIndex: isSelected ? 10 : 1,
+              }}
+              transition={{ type: "spring", stiffness: 300, damping: 20 }}
+            >
+              {/* Flip Animation */}
+              <motion.div
+                animate={{
+                  rotateY: isSelected && flipped ? 180 : 0,
+                }}
+                style={{
+                  perspective: 600,
+                }}
+                className="w-full h-full flex items-center justify-center"
+              >
+                <div className="w-full h-full backface-hidden">
+                  {isSelected && flipped ? pulledRarity : `Btn ${id + 1}`}
                 </div>
-            </div>
-        </div>
-    )
-}
-
-const overlay = {
-    position: "fixed",
-    top: 0,
-    left: 0,
-    width: "100%",
-    height: "100vh",
-    zIndex: 9999,
-    pointerEvents: "none",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-}
-
-const centerContainer = {
-    position: "relative",
-    width: 300,
-    height: 300,
-    pointerEvents: "auto",
+              </motion.div>
+            </motion.button>
+          );
+        })}
+    </div>
+  );
 }

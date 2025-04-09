@@ -2,70 +2,75 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import Rotate from "./animations";
+// import Rotate from "./animations";
 import RotateShowcase from "./rotateShowcase"
 
 const pullResults = [
   {
   _id: 1,
   rarityNum: 1,
-  rarityName: "Common"
+  rarityName: "Common",
+  shortName: "C"
   },
   {
   _id: 2,
   rarityNum: 2,
-  rarityName: "Uncommon"
+  rarityName: "Uncommon",
+  shortName: "UC"
   },
   {
   _id: 3,
   rarityNum: 3,
-  rarityName: "Rare"
+  rarityName: "Rare",
+  shortName: "R"
   },
   {
   _id: 4,
   rarityNum: 4,
-  rarityName: "Super Rare"
+  rarityName: "Super Rare",
+  shortName: "SR"
   },
 ]
 
 export default function Home() {
   const [pulled, setPulled] = useState(null)
-  const [flipped, setFlipped] = useState(false)
-
   
   function pullBox() {
     
     const pullNum = Math.random() * 100;
+    
+    let temp
 
-    if (pullNum < 50) setPulled(1)
-    if (pullNum > 50) setPulled(2)
-    if (pullNum > 75) setPulled(3)
-    if (pullNum > 95) setPulled(4)
+    if (pullNum < 50) temp = 1
+    if (pullNum > 50) temp = 2
+    if (pullNum > 75) temp = 3
+    if (pullNum > 95) temp = 4
+
+    setPulled(pullResults.find(res => res.rarityNum === temp))
     
     console.log(pullNum)
   }
-
+  
   let pullText = 'You have not pulled for an item yet'
   if (pulled) {
-
-    console.log('pulled', pulled);
-    // pullText = RotateShowcase(pulled)
-    // pullText = `YOU GOT A ${pullResults.find(res => res.rarityNum === pulled).rarityName} REWARD`
+    
+    pullText = `YOU GOT A ${pulled.rarityName} REWARD`
   } 
 
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-            <RotateShowcase 
-            show={pulled}
-            flipped={flipped}
-            onFlip={() => setFlipped(!flipped)}
-            />
+            
 
       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
 
     
         <div className="sm:items-center justify-items-center">
               {pullText}
+              {pulled && <RotateShowcase 
+              show={pulled?.rarityNum}
+              pulledRarity={pulled.shortName}
+
+            />}
           <div className="flex items-center flex-col sm:flex-row">
             
             
