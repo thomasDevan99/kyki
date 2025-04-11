@@ -8,8 +8,6 @@ export default function OrbitingPortal({show, pulledRarity, setShow}) {
   const [selected, setSelected] = useState(null);
   const [flipped, setFlipped] = useState(false);
 
-  // console.log('show', show);
-  // console.log('pulledRarity', pulledRarity);
   if (show == null) return
 
 
@@ -53,15 +51,12 @@ export default function OrbitingPortal({show, pulledRarity, setShow}) {
             >
               {/* Flip Animation */}
               <motion.div
-                // animate={{
-                //   rotateY: isSelected && flipped ? 360 : 0,
-                // }}
                 style={{
                   perspective: 1000,
                 }}
                 className="w-full h-full flex items-center justify-center"
               >
-                <div className="w-full h-full backface-hidden" style={{alignContent: 'center'}}>
+                <div className="w-full h-full backface-hidden text-black" style={{alignContent: 'center'}}>
                   {isSelected && flipped ? pulledRarity : `?`}
                 </div>
               </motion.div>
