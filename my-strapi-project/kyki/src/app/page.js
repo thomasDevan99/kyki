@@ -4,33 +4,7 @@ import Image from "next/image";
 import { useState } from "react";
 // import Rotate from "./animations";
 import RotateShowcase from "./rotateShowcase"
-
-const pullResults = [
-  {
-  _id: 1,
-  rarityNum: 1,
-  rarityName: "Common",
-  shortName: "C"
-  },
-  {
-  _id: 2,
-  rarityNum: 2,
-  rarityName: "Uncommon",
-  shortName: "UC"
-  },
-  {
-  _id: 3,
-  rarityNum: 3,
-  rarityName: "Rare",
-  shortName: "R"
-  },
-  {
-  _id: 4,
-  rarityNum: 4,
-  rarityName: "Super Rare",
-  shortName: "SR"
-  },
-]
+import { possibleResults } from "@/dataStructure/possibleResults";
 
 export default function Home() {
   const [pulled, setPulled] = useState(null)
@@ -46,7 +20,7 @@ export default function Home() {
     if (pullNum > 75) temp = 3
     if (pullNum > 95) temp = 4
 
-    setPulled(pullResults.find(res => res.rarityNum === temp))
+    setPulled(possibleResults.find(res => res.rarityNum === temp))
     
     console.log(pullNum)
   }
