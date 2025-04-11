@@ -4,12 +4,12 @@ import { motion } from "framer-motion";
 const buttons = [0, 1, 2, 3, 4, 5, 6, 7, 8];
 const radius = 150;
 
-export default function OrbitingPortal({show, pulledRarity}) {
+export default function OrbitingPortal({show, pulledRarity, setShow}) {
   const [selected, setSelected] = useState(null);
   const [flipped, setFlipped] = useState(false);
 
-  console.log('show', show);
-  console.log('pulledRarity', pulledRarity);
+  // console.log('show', show);
+  // console.log('pulledRarity', pulledRarity);
   if (show == null) return
 
 
@@ -17,7 +17,10 @@ export default function OrbitingPortal({show, pulledRarity}) {
     if (selected === null) {
       setSelected(id);
     } else if (selected === id) {
-      setFlipped((prev) => !prev);
+      setFlipped((prev) => {
+        if (prev == true) setShow(null)
+        return !prev
+      });
     }
   };
 
