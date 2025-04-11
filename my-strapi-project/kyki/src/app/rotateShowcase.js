@@ -4,29 +4,55 @@ import { motion } from "framer-motion";
 const buttons = [0, 1, 2, 3, 4, 5, 6, 7, 8];
 const radius = 150;
 
-export default function OrbitingPortal({show, pulledRarity, setShow}) {
+import { possibleResults } from "@/dataStructure/possibleResults";
+
+export default function OrbitingPortal({setisIdle}) {
   const [selected, setSelected] = useState(null);
   const [flipped, setFlipped] = useState(false);
+  const [pulled, setPulled] = useState()
 
-  if (show == null) return
-
-
+  console.log('pulled', pulled);
   const handleButtonClick = (id) => {
     if (selected === null) {
       setSelected(id);
     } else if (selected === id) {
       setFlipped((prev) => {
-        if (prev == true) setShow(null)
+        console.log('!prev', !prev);
+        if (prev == true) setisIdle(true)
         return !prev
       });
     }
   };
 
+  function pullBox() {
+      const pullNum = Math.random() * 100;
+      
+      let temp
+
+      if (pullNum < 50) temp = 1
+      if (pullNum > 50) temp = 2
+      if (pullNum > 75) temp = 3
+      if (pullNum > 95) temp = 4
+      
+      setPulled(possibleResults.find(res => res.rarityNum === temp))
+      
+    }
+  
+  let pullText = 'You have not pulled for an item yet'
+  if (selected) {
+    pullText = `YOU GOT A ${pulled?.rarityName} REWARD`
+  }
+
+
   return (
     <div className="flex items-center justify-center h-screen bg-gray-100 relative" style={{height: "0"}}>
 
+      <div className="pb-106 sm:items-center justify-items-center">
+        {pulled && pullText}
+      </div>
+
       {/* Rotating Buttons */}
-      {show &&
+      {
         buttons.map((id, index) => {
           const angle = (index / buttons.length) * 2 * Math.PI;
           const x = radius * Math.cos(angle);
@@ -54,10 +80,11 @@ export default function OrbitingPortal({show, pulledRarity, setShow}) {
                 style={{
                   perspective: 1000,
                 }}
+                onClick={() => isSelected && pullBox()}
                 className="w-full h-full flex items-center justify-center"
               >
                 <div className="w-full h-full backface-hidden text-black" style={{alignContent: 'center'}}>
-                  {isSelected && flipped ? pulledRarity : `?`}
+                  {isSelected && flipped ? pulled?.shortName : `?`}
                 </div>
               </motion.div>
             </motion.button>
