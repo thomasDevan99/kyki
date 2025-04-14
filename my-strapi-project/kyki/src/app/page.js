@@ -3,9 +3,11 @@
 import Image from "next/image";
 import { useState } from "react";
 import RotateShowcase from "./rotateShowcase";
+import { motion } from "framer-motion";
 
 export default function Home() {
   const [isIdle, setisIdle] = useState(true);
+
 
   return (
     <div className="grid grid-rows-[auto_1fr_auto] min-h-screen items-center justify-items-center px-4 sm:px-8 md:px-12 py-8 font-[family-name:var(--font-geist-sans)]">
@@ -13,9 +15,19 @@ export default function Home() {
         {!isIdle && <RotateShowcase setisIdle={setisIdle} />}
         
         {isIdle && (
-          <button
+          <motion.button
             className="rounded-full border border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-6"
             onClick={() => setisIdle(false)}
+            animate={{
+              y: [0, -4, 0],       // float up and back down
+              scale: [1, 1.05, 1], // slight breathing effect
+            }}
+            transition={{
+              duration: 2,
+              ease: "easeInOut",
+              repeat: Infinity,
+              repeatType: "loop",
+            }}
           >
             <Image
               className="dark:invert"
@@ -25,7 +37,7 @@ export default function Home() {
               height={20}
             />
             Pull Now
-          </button>
+          </motion.button>
         )}
       </main>
     </div>
