@@ -14,13 +14,21 @@ export default function OrbitingPortal({ setisIdle }) {
       setSelected(id);
     } else if (selected === id) {
       setFlipped((prev) => {
-        if (prev === true) setisIdle(true);
         return !prev;
       });
     }
   };
 
+  const reset = () => {
+    setSelected(null)
+    setFlipped(false)
+    setPulled()
+    setisIdle(true)
+  }
+
   const pullBox = () => {
+    if (pulled) return
+
     const pullNum = Math.random() * 100;
     let temp;
 
@@ -42,17 +50,8 @@ export default function OrbitingPortal({ setisIdle }) {
 
   return (
     <>
-       <div className="sm:items-center justify-items-center">
-
-        <motion.button className="rounded-full bg-white text-black flex items-center justify-center" 
-          onClick={() => setFlipped(false) && setSelected(null) && setPulled()}
-        >
-          <div className="p-4">
-              Pull Again
-          </div>
-        </motion.button>
-      </div>
-      <div className="relative w-full h-[60vh] flex items-center justify-center overflow-hidden">
+      
+      <div className="relative w-full h-[80vh] flex items-center justify-center overflow-hidden">
         {/* Orbiting Buttons */}
         {buttons.map((id, index) => {
           const angle = (index / buttons.length) * 2 * Math.PI;
@@ -97,6 +96,18 @@ export default function OrbitingPortal({ setisIdle }) {
 
       <div className="text-center text-base sm:text-lg">
         {pulled && pullText}
+      </div>
+
+      <div className="sm:items-center justify-items-center">
+        {pulled &&
+        <motion.button className="rounded-full bg-white text-black flex items-center justify-center" 
+          onClick={() => reset()}
+        >
+          <div className="p-4">
+              Pull Again
+          </div>
+        </motion.button>
+        }
       </div>
     </>
   );
