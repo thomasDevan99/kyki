@@ -40,7 +40,7 @@ export default function OrbitingPortal({ setisIdle }) {
     setPulled(possibleResults.find((res) => res.rarityNum === temp));
   };
 
-  const pullText = selected ? `YOU GOT A ${pulled?.rarityName} REWARD` : 'You have not pulled for an item yet';
+  const pullText = selected != null ? `YOU GOT A ${pulled?.rarityName} REWARD` : 'You have not pulled for an item yet';
 
   const radius = typeof window !== "undefined"
     ? window.innerWidth < 768
