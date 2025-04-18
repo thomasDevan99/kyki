@@ -8,6 +8,7 @@ export default function OrbitingPortal({ setisIdle }) {
   const [selected, setSelected] = useState(null);
   const [flipped, setFlipped] = useState(false);
   const [pulled, setPulled] = useState();
+  const [allReveal, setAllReveal] = useState(false)
 
   const handleButtonClick = (id) => {
     if (selected === null) {
@@ -24,6 +25,7 @@ export default function OrbitingPortal({ setisIdle }) {
     setFlipped(false)
     setPulled()
     setisIdle(true)
+    setAllReveal(false)
   }
 
   const pullBox = () => {
@@ -39,6 +41,20 @@ export default function OrbitingPortal({ setisIdle }) {
 
     setPulled(possibleResults.find((res) => res.rarityNum === temp));
   };
+
+  const genFakePull = () => {
+    if (!allReveal) return
+
+    const pullNum = Math.random() * 100;
+    let temp
+    
+    if (pullNum < 50) temp = 1;
+    if (pullNum > 50) temp = 2;
+    if (pullNum > 75) temp = 3;
+    if (pullNum > 95) temp = 4;
+    
+    return possibleResults.find((res) => res.rarityNum === temp).shortName;
+  }
 
   const pullText = selected != null ? `YOU GOT A ${pulled?.rarityName} REWARD` : 'You have not pulled for an item yet';
 
@@ -60,7 +76,7 @@ export default function OrbitingPortal({ setisIdle }) {
       
 
           const isSelected = selected === id;
-          const isRevealed = isSelected && flipped;
+          const isRevealed = isSelected && flipped || allReveal;
 
           return (
             <motion.button
@@ -86,7 +102,7 @@ export default function OrbitingPortal({ setisIdle }) {
                 className="w-full h-full flex items-center justify-center"
               >
                 <div className="w-full h-full backface-hidden text-black flex items-center justify-center">
-                  {isSelected && flipped ? pulled?.shortName : "?"}
+                  {isSelected && flipped ? pulled?.shortName : allReveal ? `${genFakePull()}` : "?"}
                 </div>
               </motion.div>
             </motion.button>
@@ -98,7 +114,7 @@ export default function OrbitingPortal({ setisIdle }) {
         {pulled && pullText}
       </div>
 
-      <div className="sm:items-center justify-items-center">
+      <div className="sm:items-center justify-items-center grid grid-cols-2 gap-10">
         {pulled &&
         <motion.button className="rounded-full bg-white text-black flex items-center justify-center" 
           onClick={() => reset()}
@@ -108,6 +124,16 @@ export default function OrbitingPortal({ setisIdle }) {
           </div>
         </motion.button>
         }
+        {pulled &&
+        <motion.button className="rounded-full bg-white text-black flex items-center justify-center" 
+          onClick={() => setAllReveal(true)}
+        >
+          <div className="p-4">
+              Reveal All
+          </div>
+        </motion.button>
+        }
+        
       </div>
     </>
   );
