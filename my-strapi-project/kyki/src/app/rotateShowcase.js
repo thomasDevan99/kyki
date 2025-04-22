@@ -31,30 +31,29 @@ export default function OrbitingPortal({ setisIdle }) {
 
   const pullBox = () => {
     if (pulled) return
-
     const pullNum = Math.random() * 100;
-    let temp;
+    
+    const temp = possibleResults.find((res, index) => {
+      const minChance = index === 0 ? 0 : possibleResults.slice(0, index).reduce((acc, val) => acc + val.chance, 0);
+      const maxChance = minChance + res.chance;
+      return pullNum >= minChance && pullNum < maxChance;
+    });
 
-    if (pullNum < 50) temp = 1;
-    if (pullNum > 50) temp = 2;
-    if (pullNum > 75) temp = 3;
-    if (pullNum > 95) temp = 4;
-
-    setPulled(possibleResults.find((res) => res.rarityNum === temp));
+    temp && setPulled(temp)
   };
 
   const genFakePull = () => {
-    if (!allReveal) return
+    if (!allReveal && !flipped) return
 
     const pullNum = Math.random() * 100;
-    let temp
     
-    if (pullNum < 50) temp = 1;
-    if (pullNum > 50) temp = 2;
-    if (pullNum > 75) temp = 3;
-    if (pullNum > 95) temp = 4;
-    
-    return possibleResults.find((res) => res.rarityNum === temp).shortName;
+     const temp = possibleResults.find((res, index) => {
+      const minChance = index === 0 ? 0 : possibleResults.slice(0, index).reduce((acc, val) => acc + val.chance, 0);
+      const maxChance = minChance + res.chance;
+      return pullNum >= minChance && pullNum < maxChance;
+    });
+
+    return temp.shortName
   }
 
   const pullText = selected != null ? `YOU GOT A ${pulled?.rarityName} REWARD` : 'You have not pulled for an item yet';
@@ -103,7 +102,7 @@ export default function OrbitingPortal({ setisIdle }) {
                 className="w-full h-full flex items-center justify-center"
               >
                 <div className="w-full h-full backface-hidden text-black flex items-center justify-center">
-                  {isSelected && flipped ? pulled?.shortName : allReveal ? `${genFakePull()}` : "?"}
+                  {isSelected && flipped ? pulled?.shortName : allReveal ? genFakePull() : "?"}
                 </div>
               </motion.div>
             </motion.button>
