@@ -4,12 +4,13 @@ import { possibleResults } from "@/dataStructure/possibleResults";
 
 const buttons = [0, 1, 2, 3, 4, 5, 6, 7, 8];
 
+
 export default function OrbitingPortal({ setisIdle }) {
   const [selected, setSelected] = useState(null);
   const [flipped, setFlipped] = useState(false);
   const [pulled, setPulled] = useState();
   const [allReveal, setAllReveal] = useState(false)
-
+  
   const handleButtonClick = (id) => {
     if (selected === null) {
       setSelected(id);
@@ -56,6 +57,47 @@ export default function OrbitingPortal({ setisIdle }) {
     return temp.shortName
   }
 
+  const animationProps = (id, isSelected, isRevealed) => {
+    const angle = (id / buttons.length) * 2 * Math.PI;
+    const x = radius * Math.cos(angle);
+    const y = radius * Math.sin(angle);
+    if (!flipped) {
+
+      return {
+        x: isSelected ? 0 : x,
+        y: isSelected ? 0 : y,
+        scale: isSelected ? 1.3 : 1,
+        zIndex: isSelected ? 10 : 1,
+        rotateY: isRevealed ? 1080 : 0,
+      };
+    } else {
+
+      return {
+        scale: [1, 1.05, 1],
+        x: isSelected ? 0 : x,
+        y: isSelected ? 0 : y,
+        rotateY: isRevealed ? 1080 : 0,
+      }
+    }
+  };
+
+  const transitionProps = (isRevealed) => {
+    if (!flipped) {
+      return {
+      type: "spring",
+      stiffness: isRevealed ? 10 : 100,
+      damping: isRevealed ? 3 : 20,
+      }
+    } else {
+        return {
+          duration: 2,
+          ease: "easeInOut",
+          repeat: 0,
+          repeatType: "loop",
+        }
+    }
+  };
+
   const pullText = selected != null ? `YOU GOT A ${pulled?.rarityName} REWARD` : 'You have not pulled for an item yet';
 
   const radius = typeof window !== "undefined"
@@ -83,18 +125,8 @@ export default function OrbitingPortal({ setisIdle }) {
               key={id}
               className="absolute w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-green-400 text-white flex items-center justify-center"
               onClick={() => handleButtonClick(id)}
-              animate={{
-                x: isSelected ? 0 : x,
-                y: isSelected ? 0 : y,
-                scale: isSelected ? 1.3 : 1,
-                zIndex: isSelected ? 10 : 1,
-                rotateY: isRevealed ? 1080 : 0,
-              }}
-              transition={{
-                type: "spring",
-                stiffness: isRevealed ? 10 : 100,
-                damping: isRevealed ? 3 : 20,
-              }}
+              animate={animationProps(id, isSelected, isRevealed)}
+              transition={transitionProps(isRevealed)}
             >
               <motion.div
                 style={{ perspective: 1000 }}
