@@ -15,6 +15,7 @@ export default function OrbitingPortal({ setisIdle }) {
       setSelected(id);
     } else if (selected === id) {
       setFlipped((prev) => {
+        if (prev) return prev
         return !prev;
       });
     }
