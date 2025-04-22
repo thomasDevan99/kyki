@@ -124,7 +124,7 @@ export default function OrbitingPortal({ setisIdle }) {
           </div>
         </motion.button>
         }
-        {pulled &&
+        {pulled && !allReveal &&
         <motion.button className="rounded-full bg-white text-black flex items-center justify-center" 
           onClick={() => setAllReveal(true)}
         >
