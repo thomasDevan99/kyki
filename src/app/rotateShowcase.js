@@ -13,7 +13,9 @@ export default function OrbitingPortal({ setisIdle, numberOfPulls }) {
   console.log('numberOfPulls', numberOfPulls);
   
   const handleButtonClick = (id, numberOfPulls) => {
-    if (selected === null && numberOfPulls === 1) {
+    console.log('selected', selected);
+   
+    if ((selected === null) && (numberOfPulls === 1)) {
       setSelected(id);
     } else if (selected === id || numberOfPulls != 1) {
       setFlipped((prev) => {
@@ -29,33 +31,6 @@ export default function OrbitingPortal({ setisIdle, numberOfPulls }) {
     setPulled()
     setisIdle(true)
     setAllReveal(false)
-  }
-
-  const pullBox = () => {
-    if (pulled) return
-    const pullNum = Math.random() * 100;
-    
-    const temp = possibleResults.find((res, index) => {
-      const minChance = index === 0 ? 0 : possibleResults.slice(0, index).reduce((acc, val) => acc + val.chance, 0);
-      const maxChance = minChance + res.chance;
-      return pullNum >= minChance && pullNum < maxChance;
-    });
-
-    temp && setPulled(temp)
-  };
-
-  const genFakePull = () => {
-    if (!allReveal && !flipped) return
-
-    const pullNum = Math.random() * 100;
-    
-     const temp = possibleResults.find((res, index) => {
-      const minChance = index === 0 ? 0 : possibleResults.slice(0, index).reduce((acc, val) => acc + val.chance, 0);
-      const maxChance = minChance + res.chance;
-      return pullNum >= minChance && pullNum < maxChance;
-    });
-
-    return temp.shortName
   }
 
   const animationProps = (id, isSelected, isRevealed) => {
@@ -125,17 +100,17 @@ export default function OrbitingPortal({ setisIdle, numberOfPulls }) {
             <motion.button
               key={id}
               className="absolute w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-green-400 text-white flex items-center justify-center"
-              onClick={() => handleButtonClick(id)}
+              onClick={() => handleButtonClick(id, numberOfPulls)}
               animate={animationProps(id, isSelected, isRevealed)}
               transition={transitionProps(isRevealed)}
             >
               <motion.div
                 style={{ perspective: 1000 }}
-                onClick={() => isSelected && pullBox()}
+                onClick={() => isSelected && pullBox(pulled, setPulled)}
                 className="w-full h-full flex items-center justify-center"
               >
                 <div className="w-full h-full backface-hidden text-black flex items-center justify-center">
-                  {isSelected && flipped ? pulled?.shortName : allReveal ? genFakePull() : "?"}
+                  {isSelected && flipped ? pulled?.shortName : allReveal ? genFakePull(allReveal, flipped) : "?"}
                 </div>
               </motion.div>
             </motion.button>
