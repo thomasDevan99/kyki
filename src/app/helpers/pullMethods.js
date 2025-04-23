@@ -24,5 +24,5 @@ export const pullBox = (pullData, setPullData) => {
       return pullNum >= minChance && pullNum < maxChance;
     });
 
-    return temp.shortName
+    return temp
   }
