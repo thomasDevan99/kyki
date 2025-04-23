@@ -16,21 +16,28 @@ export const possibleResults = [
     _id: 2,
     rarityNum: 2,
     rarityName: "Uncommon",
-    shortName: "UC",
-    chance: 25
+    shortName: "B",
+    chance: 24.5
     },
     {
     _id: 3,
     rarityNum: 3,
     rarityName: "Rare",
-    shortName: "R",
+    shortName: "A",
     chance: 20
     },
     {
     _id: 4,
     rarityNum: 4,
     rarityName: "Super Rare",
-    shortName: "SR",
-    chance: 5
+    shortName: "S",
+    chance: 4.5
     },
+    {
+      _id: 5,
+      rarityNum: 5,
+      rarityName: "Legendary",
+      shortName: "SS",
+      chance: 1
+    }
   ]
