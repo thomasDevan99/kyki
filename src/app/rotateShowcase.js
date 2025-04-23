@@ -2,19 +2,20 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { possibleResults } from "@/dataStructure/possibleResults";
 
-const buttons = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+const buttons = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 
-export default function OrbitingPortal({ setisIdle }) {
+export default function OrbitingPortal({ setisIdle, numberOfPulls }) {
   const [selected, setSelected] = useState(null);
   const [flipped, setFlipped] = useState(false);
   const [pulled, setPulled] = useState();
   const [allReveal, setAllReveal] = useState(false)
+  console.log('numberOfPulls', numberOfPulls);
   
-  const handleButtonClick = (id) => {
-    if (selected === null) {
+  const handleButtonClick = (id, numberOfPulls) => {
+    if (selected === null && numberOfPulls === 1) {
       setSelected(id);
-    } else if (selected === id) {
+    } else if (selected === id || numberOfPulls != 1) {
       setFlipped((prev) => {
         if (prev) return prev
         return !prev;
