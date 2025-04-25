@@ -1,19 +1,14 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { genFakePull, pullBox } from "./helpers/pullMethods";
 import MultipullRotate from "./animations/multipullRotate";
 import SingleSelect from "./animations/singleSelect";
 
-const buttons = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
-
-export default function OrbitingPortal({ setisIdle, numberOfPulls }) {
+export default function PullPortal({ setisIdle, numberOfPulls }) {
   const [selected, setSelected] = useState(null);
   const [flipped, setFlipped] = useState(false);
   const [pulled, setPulled] = useState();
   const [allReveal, setAllReveal] = useState(false)
-
-  
 
   const reset = () => {
     setSelected(null)
@@ -24,12 +19,6 @@ export default function OrbitingPortal({ setisIdle, numberOfPulls }) {
   }
 
   const pullText = selected != null ? `YOU GOT A ${pulled?.rarityName} REWARD` : 'You have not pulled for an item yet';
-
-  const radius = typeof window !== "undefined"
-    ? window.innerWidth < 768
-      ? 100 // smaller radius for mobile/tablet
-      : 150
-    : 150;
 
 
   return (

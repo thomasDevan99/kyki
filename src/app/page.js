@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import RotateShowcase from "./rotateShowcase";
+import PullPortal from "./pullPortal";
 import { motion } from "framer-motion";
 
 export default function Home() {
@@ -12,7 +12,7 @@ export default function Home() {
   return (
     <div className="content-center min-h-screen items-center justify-items-center px-4 sm:px-8 md:px-12 py-8 font-[family-name:var(--font-geist-sans)]">
       <main className="w-full max-w-4xl flex flex-col items-center gap-4">
-        {!isIdle && <RotateShowcase setisIdle={setisIdle} numberOfPulls={pullNum} />}
+        {!isIdle && <PullPortal setisIdle={setisIdle} numberOfPulls={pullNum} />}
         {isIdle && (
           <motion.button
             className="rounded-full border border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-6"
