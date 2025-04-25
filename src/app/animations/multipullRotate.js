@@ -66,6 +66,12 @@ export default function MultipullRotate({ flipped, setFlipped }) {
                 >
                     <motion.div
                     style={{ perspective: 1000 }}
+                    animate={{ rotate: -360 }}
+                    transition={{
+                        repeat: Infinity,
+                        duration: 8,
+                        ease: "linear",
+                    }}
                     className="w-full h-full flex items-center justify-center"
                     >
                     <div className="w-full h-full backface-hidden text-black flex items-center justify-center">
