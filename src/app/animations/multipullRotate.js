@@ -3,7 +3,13 @@ import { motion } from "framer-motion";
 import { genFakePull } from "../helpers/pullMethods";
 
 const buttons = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];  // 10 buttons
-const radius = 150;  // Radius of the orbit
+
+const radius = typeof window !== "undefined"
+    ? window.innerWidth < 768
+      ? 100 // smaller radius for mobile/tablet
+      : 150
+    : 150;
+
 
 export default function MultipullRotate({ flipped, setFlipped }) {
 
@@ -45,7 +51,7 @@ export default function MultipullRotate({ flipped, setFlipped }) {
             {/* Orbiting Buttons Container */}
             <motion.div
             className="absolute w-full h-full flex justify-center items-center"
-            animate={{ rotate: 360 }}
+            animate={{ rotate: 360, scale: [1, 1.2, 1]}}
             transition={{
                 repeat: Infinity,
                 duration: 8,
