@@ -10,7 +10,7 @@ export const possibleResults = [
     rarityNum: 1,
     rarityName: "Common",
     shortName: "B",
-    chance: 87,
+    chance: 70,
     color: "#60A5FA"
     },
     {
@@ -18,7 +18,7 @@ export const possibleResults = [
     rarityNum: 2,
     rarityName: "Uncommon",
     shortName: "A",
-    chance: 10,
+    chance: 19,
     color: '#C084FC'
     },
     {
@@ -26,7 +26,7 @@ export const possibleResults = [
     rarityNum: 3,
     rarityName: "Rare",
     shortName: "S",
-    chance: 2,
+    chance: 10,
     color: '#FB923C'
 
     },
