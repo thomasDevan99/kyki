@@ -33,7 +33,7 @@ export default function PullPortal({ setisIdle, numberOfPulls }) {
         {pulled && pullText}
       </div>
 
-      <div className="sm:items-center justify-items-center grid grid-cols-2 gap-10">
+      <div className="z-1 sm:items-center justify-items-center grid grid-cols-2 gap-10">
         {(pulled || numberOfPulls == 10 && flipped) &&
         <motion.button className="rounded-full bg-white text-black flex items-center justify-center" 
           onClick={() => reset()}
