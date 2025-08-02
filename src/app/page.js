@@ -10,6 +10,11 @@ export default function Home() {
   const [pullNum, setPullNum] = useState(1);
 
   return (
+    <div style={{
+      backgroundImage: `url(${"/1.jpg"})`,
+      backgroundSize: 'cover', // or 'contain', 'auto'
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat',}}>
     <div className="content-center min-h-screen items-center justify-items-center px-4 sm:px-8 md:px-12 py-8 font-[family-name:var(--font-geist-sans)]">
       <main className="w-full max-w-4xl flex flex-col items-center gap-4">
         {!isIdle && <PullPortal setisIdle={setisIdle} numberOfPulls={pullNum} />}
@@ -70,6 +75,7 @@ export default function Home() {
           </motion.button>
         )}
       </main>
+    </div>
     </div>
   );
 }
