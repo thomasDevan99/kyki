@@ -1,20 +1,60 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { genFakePull, pullBox } from "../helpers/pullMethods";
+import { genFakePull } from "../helpers/pullMethods";
 
-const buttons = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+const buttons = [0,1,2,3,4,5,6,7,8,9];
+const radius = typeof window !== "undefined" ? (window.innerWidth < 768 ? 100 : 150) : 150;
 
+export default function SingleSelect({
+  allReveal,
+  pulled,
+  setPulled,
+  flipped,
+  setFlipped,
+  selected,
+  setSelected,
+}) {
+  const [generatedPull, setGeneratedPull] = useState(null);
+  const [allPulls, setAllPulls] = useState([]);
 
-export default function SingleSelect({ allReveal, pulled, setPulled, flipped, setFlipped, selected, setSelected }) {
+  // Generate pull for selected button only (if not allReveal)
+  useEffect(() => {
+    if (selected !== null && !flipped && !allReveal) {
+      genFakePull().then(setGeneratedPull);
+    }
+  }, [selected, flipped, allReveal]);
+
+  // Generate pulls for all buttons when allReveal becomes true
+  useEffect(() => {
+    if (allReveal) {
+      Promise.all(buttons.map(() => genFakePull())).then(setAllPulls);
+    } else {
+      setAllPulls([]);
+    }
+  }, [allReveal]);
+
+  const submitPull = async (pullData) => {
+    if (!pullData) return;
+    try {
+      const res = await fetch("/api/entries", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ rarities: [pullData.shortName] }),
+      });
+      if (res.ok) return
+      else alert("Failed to submit entry");
+    } catch {
+      alert("Error submitting entry");
+    }
+  };
 
   const handleButtonClick = (id) => {
-    if ((selected === null)) {
+    if (selected === null) {
       setSelected(id);
-    } else if (selected === id) {
-      setFlipped((prev) => {
-        if (prev) return prev
-        return !prev;
-      });
+    } else if (selected === id && !flipped) {
+      setFlipped(true);
+      submitPull(generatedPull);
+      setPulled(generatedPull);
     }
   };
 
@@ -22,8 +62,8 @@ export default function SingleSelect({ allReveal, pulled, setPulled, flipped, se
     const angle = (id / buttons.length) * 2 * Math.PI;
     const x = radius * Math.cos(angle);
     const y = radius * Math.sin(angle);
-    if (!flipped) {
 
+    if (!flipped && !allReveal) {
       return {
         x: isSelected ? 0 : x,
         y: isSelected ? 0 : y,
@@ -32,83 +72,70 @@ export default function SingleSelect({ allReveal, pulled, setPulled, flipped, se
         rotateY: isRevealed ? 1080 : 0,
       };
     } else {
-
       return {
         scale: [1, 1.05, 1],
         x: isSelected ? 0 : x,
         y: isSelected ? 0 : y,
         rotateY: isRevealed ? 1080 : 0,
         backgroundColor: ["#9CA3AF", color],
-      }
+      };
     }
   };
 
   const transitionProps = (isRevealed) => {
-    if (!flipped) {
+    if (!flipped && !allReveal) {
       return {
-      type: "spring",
-      stiffness: isRevealed ? 10 : 100,
-      damping: isRevealed ? 3 : 20,
-      }
+        type: "spring",
+        stiffness: isRevealed ? 10 : 100,
+        damping: isRevealed ? 3 : 20,
+      };
     } else {
-        return {
-          duration: 2,
-          ease: "easeInOut",
-          repeat: 0,
-          repeatType: "loop",
-        }
+      return {
+        duration: 2,
+        ease: "easeInOut",
+        repeat: 0,
+        repeatType: "loop",
+      };
     }
   };
-
-  const pullText = selected != null ? `YOU GOT A ${pulled?.rarityName} REWARD` : 'You have not pulled for an item yet';
-
-  const radius = typeof window !== "undefined"
-    ? window.innerWidth < 768
-      ? 100 // smaller radius for mobile/tablet
-      : 150
-    : 150;
-
 
   return (
     <>
       <div className="relative w-full h-[80vh] flex items-center justify-center overflow-hidden">
-        {buttons.map((id, index) => {
-          const angle = (index / buttons.length) * 2 * Math.PI;
-          const x = radius * Math.cos(angle);
-          const y = radius * Math.sin(angle);
-      
+        {buttons.map((id) => {
+  const isSelected = selected === id;
+  const isRevealed = (isSelected && flipped) || allReveal;
 
-          const isSelected = selected === id;
-          const isRevealed = isSelected && flipped || allReveal;
+  // Use generatedPull for selected, allPulls for others (if allReveal)
+  const pullData = isSelected
+    ? generatedPull
+    : allReveal
+    ? allPulls[id]
+    : null;
 
+  const color = pullData?.color || "#9CA3AF";
 
-          const rarityFake = genFakePull(allReveal, flipped)
+  return (
+    <motion.button
+      key={id}
+      className="absolute w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-gray-400 text-white flex items-center justify-center"
+      onClick={() => handleButtonClick(id)}
+      animate={animationProps(id, isSelected, isRevealed, color)}
+      transition={transitionProps(isRevealed)}
+    >
+      <motion.div
+        style={{ perspective: 1000 }}
+        className="w-full h-full flex items-center justify-center"
+      >
+        <div className="w-full h-full backface-hidden text-black flex items-center justify-center">
+          {isRevealed ? pullData?.shortName : "?"}
+        </div>
+      </motion.div>
+    </motion.button>
+  );
+})}
 
-          const color = isSelected ? pulled?.color : allReveal && rarityFake?.color
-
-          return (
-            <motion.button
-              key={id}
-              className="absolute w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-gray-400 text-white flex items-center justify-center"
-              onClick={() => handleButtonClick(id)}
-              animate={animationProps(id, isSelected, isRevealed, color)}
-              transition={transitionProps(isRevealed)}
-            >
-              <motion.div
-                style={{ perspective: 1000 }}
-                onClick={() => isSelected && pullBox(pulled, setPulled)}
-                className="w-full h-full flex items-center justify-center"
-              >
-                <div className="w-full h-full backface-hidden text-black flex items-center justify-center">
-                  {isSelected && flipped ? pulled?.shortName : allReveal ? rarityFake.shortName : "?"}
-                </div>
-              </motion.div>
-            </motion.button>
-          );
-        })}
       </div>
-
-      
     </>
   );
 }
